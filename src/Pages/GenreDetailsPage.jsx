@@ -1,18 +1,19 @@
+import { useLocation, useParams } from "react-router-dom";
+import GenresServices from "../Services/GenresServices";
 import { useEffect, useState } from "react";
-import MoviesServices from "../Services/MoviesServices";
 import MovieCard from "../Components/MovieCard";
-import { Container } from "react-bootstrap";
-import Pagination from 'react-bootstrap/Pagination';
+import { Container, Pagination } from "react-bootstrap";
 
-const HomePage = () => {
+const GenreDetailsPage = () => {
+    const {id} = useParams();
+    const location = useLocation();
     const [movies, setMovies] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(500);
 
-    const fetchMovies = async () => {
+    const fetchMoviesByGenreID = async () => {
         try {
-            const response = await MoviesServices.getAllMovies(currentPage);
-            // setMaxPage(response.data.total_pages);
+            const response = await GenresServices.getMoviesByGenreID(currentPage, id);
             setMovies(response.data.results);
             setTimeout(() => {
                 window.scrollTo({
@@ -27,11 +28,11 @@ const HomePage = () => {
     }
 
     useEffect(() => {
-        fetchMovies()
+        fetchMoviesByGenreID();
     }, [currentPage])
 
     return <Container className="d-flex flex-column align-items-center">
-        <h1>Page d'accueil</h1>
+        <h1>{location.state.genre.name}</h1>
         <div className="d-flex justify-content-center flex-wrap gap-4">
             {movies.map((movie) => {
                 return <MovieCard movieCard={movie} key={movie.id}></MovieCard>
@@ -72,5 +73,5 @@ const HomePage = () => {
         </Pagination>
     </Container>;
 }
-
-export default HomePage;
+ 
+export default GenreDetailsPage;

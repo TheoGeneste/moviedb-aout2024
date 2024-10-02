@@ -5,6 +5,8 @@ import HomePage from './Pages/HomePage';
 import GenresPage from './Pages/GenresPage';
 import NavBar from './Components/NavBar';
 import MovieDetailsPage from './Pages/MovieDetailsPage';
+import GenreDetailsPage from './Pages/GenreDetailsPage';
+import PeoplePage from './Pages/PeoplePage';
 
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
         <Route path='/' element={<HomePage></HomePage>} ></Route>
         <Route path='/genres' element={<GenresPage></GenresPage>} ></Route>
         <Route path='/movie/:id' element={<MovieDetailsPage></MovieDetailsPage>} ></Route>
+        <Route path='/genre/:id' element={<GenreDetailsPage></GenreDetailsPage>} ></Route>
+        <Route path='/people' element={<PeoplePage></PeoplePage>} ></Route>
       </Routes>
     </BrowserRouter>
   </>

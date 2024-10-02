@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react";
-import MoviesServices from "../Services/MoviesServices";
-import MovieCard from "../Components/MovieCard";
-import { Container } from "react-bootstrap";
-import Pagination from 'react-bootstrap/Pagination';
+import PeopleService from "../Services/PeopleService";
+import PeopleCard from "../Components/PeopleCard";
+import { Container, Pagination } from "react-bootstrap";
 
-const HomePage = () => {
-    const [movies, setMovies] = useState([]);
+const PeoplePage = () => {
+    const [peoples, setPeoples] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(500);
 
-    const fetchMovies = async () => {
+    const fetchPeople = async () => {
         try {
-            const response = await MoviesServices.getAllMovies(currentPage);
-            // setMaxPage(response.data.total_pages);
-            setMovies(response.data.results);
+            const response = await PeopleService.getAllPeople(currentPage);
+            setPeoples(response.data.results);
             setTimeout(() => {
                 window.scrollTo({
                     top: 0,
@@ -27,14 +25,14 @@ const HomePage = () => {
     }
 
     useEffect(() => {
-        fetchMovies()
+        fetchPeople();
     }, [currentPage])
 
     return <Container className="d-flex flex-column align-items-center">
-        <h1>Page d'accueil</h1>
+        <h1>Peoples</h1>
         <div className="d-flex justify-content-center flex-wrap gap-4">
-            {movies.map((movie) => {
-                return <MovieCard movieCard={movie} key={movie.id}></MovieCard>
+            {peoples.map((people) => {
+                return <PeopleCard peopleCard={people} key={people.id}/>
             })}
         </div>
         <Pagination className="mt-5">
@@ -72,5 +70,5 @@ const HomePage = () => {
         </Pagination>
     </Container>;
 }
-
-export default HomePage;
+ 
+export default PeoplePage;

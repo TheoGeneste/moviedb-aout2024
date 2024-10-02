@@ -16,7 +16,7 @@ function getMovieByID(id){
     });
 }
 
-export default {    
+export default {        
     getAllMovies,
     getMovieByID
 }
