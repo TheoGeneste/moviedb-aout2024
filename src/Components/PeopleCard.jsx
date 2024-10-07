@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 const PeopleCard = ({peopleCard}) => {
     const navigate = useNavigate();
     
-    const navigateTo = (id) => {
-      navigate("/people/"+id);
+    const navigateTo = (idPeople) => {
+      navigate("/people/"+idPeople);
     }
 
     return <>
