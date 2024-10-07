@@ -1,37 +1,84 @@
 import { useEffect, useState } from "react";
 import MoviesServices from "../Services/MoviesServices";
 import MovieCard from "../Components/MovieCard";
-import { Container } from "react-bootstrap";
+import { Button, Container, Form } from "react-bootstrap";
 import Pagination from 'react-bootstrap/Pagination';
 
 const HomePage = () => {
     const [movies, setMovies] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(500);
+    const [searchValue, setSearchValue] = useState('');
+    const [searching, setSearching] = useState(false);
 
     const fetchMovies = async () => {
         try {
             const response = await MoviesServices.getAllMovies(currentPage);
             // setMaxPage(response.data.total_pages);
             setMovies(response.data.results);
+            setMaxPage(500);
             setTimeout(() => {
                 window.scrollTo({
                     top: 0,
                     left: 0,
                     behavior: "instant",
-                  });
-            },50)
+                });
+            }, 50)
         } catch (error) {
             console.log(error);
         }
     }
 
+    const searchFilm = async () => {
+        if (searchValue == "") {
+            fetchMovies();
+            setSearching(false);
+        } else {
+            try {
+                const response = await MoviesServices.getMovieByTitle(searchValue, currentPage);
+                setMaxPage(response.data.total_pages);
+                setMovies(response.data.results);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
     useEffect(() => {
-        fetchMovies()
+        if (searching == false) {
+            fetchMovies();
+        } else {
+            searchFilm();
+        }
     }, [currentPage])
 
     return <Container className="d-flex flex-column align-items-center">
         <h1>Page d'accueil</h1>
+        <Form className="col-12" onSubmit={(e)=>{
+            e.preventDefault();
+            setCurrentPage(1);
+            setSearching(true); 
+            searchFilm();
+        }}>
+            <Form.Label htmlFor="search">Chercher un film</Form.Label>
+            <Form.Control
+                type="text"
+                id="search"
+                aria-describedby="search"
+                placeholder="ex : DeadPool"
+                className="mb-3"
+                value={searchValue}
+                onChange={(e) => {
+                    setSearchValue(e.currentTarget.value);
+                }}
+            />
+        </Form>
+       
+        <Button variant="primary" className="col-12 mb-3" onClick={() => {
+            setCurrentPage(1);
+            setSearching(true); 
+            searchFilm();
+        }}>Rechercher</Button>
         <div className="d-flex justify-content-center flex-wrap gap-4">
             {movies.map((movie) => {
                 return <MovieCard movieCard={movie} key={movie.id}></MovieCard>
